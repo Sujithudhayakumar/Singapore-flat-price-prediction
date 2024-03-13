@@ -39,10 +39,7 @@ The objective is to develop a Streamlit webpage that enables users to input valu
 NOTE: To get a comprehensive overview of the project workflow, please refer to the attached document titled "Project_Workflow.pdf".
 
 
-Using the App
-
-Resale Price Prediction
-
+Using the App Resale Price Prediction
 To predict the resale price of a Singapore Flats, follow these steps:
 
 Select the "Predictions" option menu.
