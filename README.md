@@ -11,15 +11,21 @@ Link2 : Singapore Resale Flat Price Prediction Streamlit Application
 Prerequisites
 
 Python -- Programming Language
+
 pandas -- Python Library for Data Visualization
+
 numpy -- Fundamental Python package for scientific computing in Python
+
 streamlit -- Python framework to rapidly build and share beautiful machine learning and data science web apps
+
 scikit-learn -- Machine Learning library for the Python programming language
-Data Source
+
+Data Source:
 Link : https://beta.data.gov.sg/collections/189/view
 
 
 Project Workflow
+
 The following is a fundamental outline of the project:
 
 The Resale Flat Prices dataset has five distinct CSV files, each representing a specific time period. These time periods are 1990 to 1999, 2000 to 2012, 2012 to 2014, 2015 to 2016, and 2017 onwards. Therefore, it is essential to merge the five distinct CSV files into a unified dataset.
@@ -34,17 +40,28 @@ NOTE: To get a comprehensive overview of the project workflow, please refer to t
 
 
 Using the App
+
 Resale Price Prediction
+
 To predict the resale price of a Singapore Flats, follow these steps:
 
 Select the "Predictions" option menu.
+
 Fill in the following required information:
-Street Name
+
+Street 
+
 Block Number
+
 Floor Area (Per Square Meter)
+
 Lease Commence Date
+
 Storey Range
+
 Click the "PREDICT RESALE PRICE" button.
+
 The app will display the predicted resale price based on the provided information.
+
 NOTE: To get a comprehensive overview of how to use the Application locally and also on the Web Browser, please refer to the attached document titled "Documentation_for_Application_Use.pdf".
 
