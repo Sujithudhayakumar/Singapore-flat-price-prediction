@@ -58,6 +58,8 @@ Storey Range
 
 Click the "PREDICT RESALE PRICE" button.
 
+prediction link : https://dull-gifts-sing.loca.lt
+
 The app will display the predicted resale price based on the provided information.
 
 NOTE: To get a comprehensive overview of how to use the Application locally and also on the Web Browser, please refer to the attached document titled "Documentation_for_Application_Use.pdf".
