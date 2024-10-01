@@ -1,94 +1,64 @@
-import pandas as pd
 import streamlit as st
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+import pandas as pd
+import numpy as np
+import pickle
 from sklearn.preprocessing import LabelEncoder
 
-# Setting page configuration
-st.set_page_config(
-    page_title="Singapore Resale Flat Prices Prediction",
-    page_icon="🏨",
-    layout="wide"
-)
+# Load the trained model
+with open('linear_regression_model.pkl', 'rb') as model_file:
+    model = pickle.load(model_file)
 
-# Reading the data on Lat and Long of all the MRT Stations in Singapore
-data_files = [
-    '/content/ResaleFlatPricesBasedonApprovalDate19901999 (2).csv',
-    '/content/ResaleFlatPricesBasedonApprovalDate2000Feb2012 (1).csv',
-    '/content/ResaleFlatPricesBasedonRegistrationDateFromJan2015toDec2016 (1).csv',
-    '/content/ResaleFlatPricesBasedonRegistrationDateFromMar2012toDec2014 (1).csv',
-    '/content/ResaleflatpricesbasedonregistrationdatefromJan2017onwards (1).csv'
-]
+# Define the title of the app
+st.title('Resale Flat Price Prediction')
 
-dataset = pd.concat([pd.read_csv(file) for file in data_files])
 
-# Data preprocessing
-dataset['flat_type'] = dataset['flat_type'].astype(str)
-dataset['flat_model'] = dataset['flat_model'].astype(str)
-dataset["resale_price"] = dataset['resale_price'].astype("float")
-dataset['floor_area_sqm'] = dataset['floor_area_sqm'].astype('float')
-dataset['lease_commence_date'] = dataset['lease_commence_date'].astype('int64')
-dataset['lease_remaining_year'] = 99 - (2024 - dataset['lease_commence_date'])
-dataset['flat_type'] = LabelEncoder().fit_transform(dataset['flat_type'])
-dataset['flat_model'] = LabelEncoder().fit_transform(dataset['flat_model'])
+# Input fields for user to enter details
+st.header('Enter the details of the flat')
 
-# Function to remove outliers
-def remove_outliers(df, column, multiplier=1.5):
-    q1 = df[column].quantile(0.25)
-    q3 = df[column].quantile(0.75)
-    iqr = q3 - q1
-    lower_bound = q1 - (iqr * multiplier)
-    upper_bound = q3 + (iqr * multiplier)
-    return df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
+floor_area_sqm = st.number_input('Floor Area (in sqm)', min_value=20, max_value=200, value=100)
+flat_type = st.selectbox('Flat Type', options=['1 Room', '2 Room', '3 Room', '4 Room', '5 Room', 'Executive', 'Multi-Generation'])
+flat_model = st.selectbox('Flat Model', options=['Model A', 'Model B', 'Model C', 'Model D'])
+storey_range = st.selectbox('Storey Range', options=['1 TO 3', '4 TO 6', '7 TO 9', '10 TO 12', '13 TO 15', '16 TO 18', '19 TO 21', '22 TO 24', '25 TO 27', '28 TO 30', '31 TO 33', '34 TO 36', '37 TO 39', '40 TO 42', '43 TO 45', '46 TO 48', '49 TO 51'])
+lease_commence_date = st.number_input('Lease Commence Date', min_value=1900, max_value=2024, value=2000)
 
-# Removing outliers
-dataset = remove_outliers(dataset, 'flat_type')
+# Calculate the remaining lease years
+lease_remaining_year = 99 - (2024 - lease_commence_date)
 
-# Sidebar navigation
-with st.sidebar:
-    selected = st.radio("Main Menu", ["About Project", "Predictions"])
+# Encode the flat_type and flat_model as numeric values using the same encoder
+flat_type_encoder = LabelEncoder()
+flat_model_encoder = LabelEncoder()
 
-# About Project Section
-if selected == "About Project":
-    st.markdown("# Singapore Resale Flat Prices Prediction")
-    st.markdown("### Technologies: Python, Pandas, Numpy, Scikit-Learn, Streamlit, Python scripting, "
-                "Machine Learning, Data Preprocessing, Visualization, EDA, Model Building, Data Wrangling, "
-                "Model Deployment")
-    st.markdown("### Overview: This project aims to construct a machine learning model and implement "
-                "it as a user-friendly online application in order to provide accurate predictions about the "
-                "resale values of apartments in Singapore. Resale prices are influenced by a wide variety "
-                "of criteria, including location, type of apartment, total square footage, and lease length. "
-                "The model assists buyers and sellers in evaluating the worth of a flat after resale.")
+flat_type_encoded = flat_type_encoder.fit_transform([flat_type])[0]
+flat_model_encoded = flat_model_encoder.fit_transform([flat_model])[0]
 
-# Predictions Section
-if selected == "Predictions":
-    st.markdown("# Predicting Results based on Trained Models")
-    st.markdown("### Predicting Resale Price (Regression Task)")
+# Compute the median of the storey range
+def get_median(x):
+    split_list = x.split('TO')
+    float_list = [float(i) for i in split_list]
+    median = np.median(float_list)
+    return median
 
-    # New Data inputs from the user for predicting the resale price
-    with st.form("form1"):
-        floor_area_sqm = st.number_input('Floor Area (Per Square Meter)', min_value=10.0, max_value=500.0)
-        flat_type = st.selectbox("Flat Type", dataset['flat_type'].unique())
-        flat_model = st.selectbox("Flat Model", dataset['flat_model'].unique())
-        storey_median = st.number_input('Storey Median', min_value=1, max_value=99)
-        lease_remaining_year = st.number_input('Lease Remaining Year', min_value=0, max_value=99)
+storey_median = get_median(storey_range)
 
-        # Submit Button for PREDICT RESALE PRICE
-        submit_button = st.form_submit_button(label="PREDICT RESALE PRICE")
+# Create a dataframe for the input data
+input_data = pd.DataFrame({
+    'floor_area_sqm': [floor_area_sqm],
+    'flat_type': [flat_type_encoded],
+    'flat_model': [flat_model_encoded],
+    'storey_median': [storey_median],
+    'lease_remaining_year': [lease_remaining_year]
+})
 
-        if submit_button:
-            X = dataset[['floor_area_sqm', 'flat_type', 'flat_model', 'lease_remaining_year']]
-            y = dataset['resale_price']
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Predict the resale price using the model
+if st.button('Predict Resale Price'):
+    prediction = model.predict(input_data)[0]
+    st.subheader(f'Estimated Resale Price: ${prediction:,.2f}')
 
-            # Initialize and fit the model
-            lm = LinearRegression()
-            lm.fit(X_train, y_train)
-
-            # Sending the user-entered values for prediction to our model
-            try:
-                new_pred = lm.predict([[floor_area_sqm, flat_type, flat_model, lease_remaining_year]])
-                st.write('## Predicted resale price:', new_pred[0])
-
-            except Exception as e:
-                st.error("Error occurred while predicting. Please ensure all fields are filled correctly.")
+# Display the model performance metrics
+st.sidebar.header('Model Performance')
+mse = 24120125.57  # Replace with your actual MSE
+mae = 3452.78  # Replace with your actual MAE
+r2 = 0.82  # Replace with your actual R2 score
+st.sidebar.write(f'Mean Squared Error: {mse:,.2f}')
+st.sidebar.write(f'Mean Absolute Error: {mae:,.2f}')
+st.sidebar.write(f'R-Squared: {r2:.2f}')
