@@ -36,7 +36,7 @@ The objective of this study is to construct a machine learning regression model 
 
 The objective is to develop a Streamlit webpage that enables users to input values for each column and get the expected resale_price value for the flats in Singapore.
 
-NOTE: To get a comprehensive overview of the project workflow, please refer to the attached document titled "Project_Workflow.pdf".
+
 
 
 Using the App Resale Price Prediction
@@ -58,7 +58,6 @@ Storey Range
 
 Click the "PREDICT RESALE PRICE" button.
 
-prediction link : https://dull-gifts-sing.loca.lt
 
 The app will display the predicted resale price based on the provided information.
 
