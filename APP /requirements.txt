@@ -1,12 +1,5 @@
-certifi
-charset-normalizer
-click
-geopy
-idna
-numpy
-pandas
-requests
-streamlit
-streamlit-option-menu
-urllib3
-scikit-learn
+import streamlit as st
+import pandas as pd
+import numpy as np
+import pickle
+from sklearn.preprocessing import LabelEncoder
