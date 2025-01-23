@@ -6,8 +6,6 @@ Domain : Real Estate
 
 Link1 : LinkedIn Post / Working Model Video
 
-Link2 : Singapore Resale Flat Price Prediction Streamlit Application
-
 Prerequisites
 
 Python -- Programming Language
@@ -46,15 +44,15 @@ Select the "Predictions" option menu.
 
 Fill in the following required information:
 
-Street 
-
-Block Number
-
 Floor Area (Per Square Meter)
 
 Lease Commence Date
 
 Storey Range
+
+Flat model
+
+Flat type
 
 Click the "PREDICT RESALE PRICE" button.
 
