@@ -4,7 +4,8 @@ This project aims to construct a machine learning model and implement it as a us
 
 Domain : Real Estate
 
-Link1 : LinkedIn Post / Working Model Video
+
+Link: [LinkedIn Post/Working model](https://www.linkedin.com/posts/sujith-u-4347282a3_machinelearning-realestate-datascience-activity-7289948628855439361-VbQ-?utm_source=share&utm_medium=member_desktop)
 
 Prerequisites
 
